@@ -3,6 +3,13 @@
 # Update system
 sudo yum update -y
 
+# Install required packages
+sudo yum install -y docker crontabs
+
+# Start and enable crond service
+sudo systemctl start crond
+sudo systemctl enable crond
+
 # Install Docker and Docker Compose
 sudo yum install -y docker
 sudo systemctl start docker
