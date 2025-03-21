@@ -35,7 +35,7 @@ def setup_database():
     db.commit()
 
 def test_add_valid_email():
-    response = client.post("/add_email", json={
+    response = client.post("/add_emails", json={
         "project_name": "project1",
         "email": "test@example.com"
     })
@@ -48,20 +48,20 @@ def test_add_duplicate_email_same_project():
         "project_name": "project1",
         "email": "test@example.com"
     }
-    client.post("/add_email", json=email_data)
+    client.post("/add_emails", json=email_data)
     # Try to add same email again to same project
-    response = client.post("/add_email", json=email_data)
+    response = client.post("/add_emails", json=email_data)
     assert response.status_code == 200
     assert response.json() == {"message": "Email already exists in this project"}
 
 def test_add_same_email_different_projects():
     # Add email to first project
-    client.post("/add_email", json={
+    client.post("/add_emails", json={
         "project_name": "project1",
         "email": "test@example.com"
     })
     # Add same email to different project
-    response = client.post("/add_email", json={
+    response = client.post("/add_emails", json={
         "project_name": "project2",
         "email": "test@example.com"
     })
@@ -69,7 +69,7 @@ def test_add_same_email_different_projects():
     assert response.json() == {"message": "Email added successfully"}
 
 def test_add_invalid_email_with_plus():
-    response = client.post("/add_email", json={
+    response = client.post("/add_emails", json={
         "project_name": "project1",
         "email": "test+alias@example.com"
     })
@@ -77,7 +77,7 @@ def test_add_invalid_email_with_plus():
     assert "Email cannot contain '+' character" in response.json()["detail"]
 
 def test_get_emails_empty_project():
-    response = client.get("/get_emails/empty-project")
+    response = client.get("/get_emails?project_name=empty-project")
     assert response.status_code == 200
     assert response.json() == {"emails": []}
 
@@ -87,23 +87,23 @@ def test_get_emails_with_data():
     project2_emails = ["x@example.com", "y@example.com"]
     
     for email in project1_emails:
-        client.post("/add_email", json={
+        client.post("/add_emails", json={
             "project_name": "project1",
             "email": email
         })
     
     for email in project2_emails:
-        client.post("/add_email", json={
+        client.post("/add_emails", json={
             "project_name": "project2",
             "email": email
         })
     
     # Test project1 emails
-    response = client.get("/get_emails/project1")
+    response = client.get("/get_emails?project_name=project1")
     assert response.status_code == 200
     assert response.json() == {"emails": sorted(project1_emails)}
     
     # Test project2 emails
-    response = client.get("/get_emails/project2")
+    response = client.get("/get_emails?project_name=project2")
     assert response.status_code == 200
     assert response.json() == {"emails": sorted(project2_emails)} 

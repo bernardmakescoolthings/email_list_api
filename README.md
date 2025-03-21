@@ -106,11 +106,12 @@ Note:
 ## API Endpoints
 
 ### 1. Add Email
-- **URL**: `/add_email`
+- **URL**: `/add_emails`
 - **Method**: `POST`
 - **Body**:
   ```json
   {
+    "project_name": "project1",
     "email": "user@example.com"
   }
   ```
@@ -122,8 +123,10 @@ Note:
   ```
 
 ### 2. Get Emails
-- **URL**: `/get_emails`
+- **URL**: `/get_emails?project_name=project1`
 - **Method**: `GET`
+- **Query Parameters**:
+  - `project_name` (required): Name of the project to get emails for
 - **Success Response**: `200 OK`
   ```json
   {
