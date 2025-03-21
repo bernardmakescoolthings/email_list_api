@@ -4,9 +4,9 @@
 sudo yum update -y
 
 # Install required packages
-sudo yum install -y docker crontabs
+sudo yum install -y docker cronie
 
-# Start and enable crond service
+# Start and enable cron service
 sudo systemctl start crond
 sudo systemctl enable crond
 
