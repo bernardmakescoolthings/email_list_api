@@ -1,16 +1,19 @@
 #!/bin/bash
 
 # Update system
-sudo apt-get update
-sudo apt-get upgrade -y
+sudo yum update -y
 
 # Install Docker and Docker Compose
-sudo apt-get install -y docker.io docker-compose
+sudo yum install -y docker
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# Add ubuntu user to docker group
-sudo usermod -aG docker ubuntu
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Add ec2-user to docker group (using ec2-user instead of ubuntu for Amazon Linux)
+sudo usermod -aG docker ec2-user
 
 # Create .env file
 cat > .env << EOL
